@@ -41,7 +41,8 @@ jobs:
             colorthief \
             "aria2p>=0.11.3,<0.13" \
             "loguru>=0.7,<0.8" \
-            "pytest>=7,<9"
+            "pytest>=7,<9" \
+            "keyring>=25,<26"
           # 0.1.7 is pure Python and its source is compatible with 3.14, but
           # its package metadata still declares Python <3.13. The test step
           # below is the release gate for this explicit compatibility waiver.
