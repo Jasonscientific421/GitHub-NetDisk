@@ -7,6 +7,7 @@ import plistlib
 import struct
 import subprocess
 import sys
+import shutil
 from pathlib import Path
 
 from app.common.setting import APP_NAME, VERSION
@@ -48,19 +49,23 @@ def getLocalizedAppNames():
     return names
 
 
-def createBuildCommand(platform=None):
-    """Create the compiler command; localization is added after compilation."""
-    platform = platform or sys.platform
+def is_arm64_build():
+    """Detect ARM64 build by env or platform."""
+    return os.getenv("GITHUB_NETDISK_WINDOWS_ARM64", "") == "1" or platform.machine().lower() in ("arm64", "aarch64")
 
-    if platform == 'win32':
+
+def createBuildCommand(platform_name=None):
+    """Create the compiler command; localization is added after compilation."""
+    platform_name = platform_name or sys.platform
+
+    if platform_name == 'win32':
+        # Base command without pyqt5 plugin args
         command = [
             sys.executable,
             '-m',
             'nuitka',
             '--standalone',
             '--windows-disable-console',
-            '--plugin-enable=pyqt5',
-            '--include-qt-plugins=sensible',
             '--include-package=keyring',
             '--assume-yes-for-downloads',
             '--show-memory',
@@ -78,10 +83,15 @@ def createBuildCommand(platform=None):
         # MSYS2's CLANGARM64 Python, Qt and PyQt5, whose ABI must be compiled
         # with the matching Clang/UCRT toolchain already present on PATH.
         if not os.environ.get('GITHUB_NETDISK_WINDOWS_ARM64'):
+            # Insert MSVC option for non-ARM builds
             command.insert(8, '--msvc=latest')
+            # For non-ARM (amd64) keep using the pyqt5 plugin and sensible qt plugins
+            # (the plugin is known to fail on ARM64 currently)
+            command.insert(9, '--plugin-enable=pyqt5')
+            command.insert(10, '--include-qt-plugins=sensible')
         return command
 
-    if platform == 'darwin':
+    if platform_name == 'darwin':
         return [
             sys.executable,
             '-m',
@@ -318,6 +328,48 @@ def _findArtifact(pattern):
     return max(artifacts, key=lambda path: path.stat().st_mtime)
 
 
+def copy_qt_plugins_to_dist(dist_root=DIST_FOLDER):
+    """
+    Copy Qt plugin subfolders from the PyQt5 installation into the Nuitka dist
+    so runtime finds platform/imageformat/plugins when the plugin cannot be used.
+    """
+    try:
+        import PyQt5
+    except Exception as e:
+        print("copy_qt_plugins_to_dist: 无法导入 PyQt5，跳过复制 Qt 插件：", e)
+        return
+
+    pyqt_root = Path(PyQt5.__file__).parent
+    candidates = [
+        pyqt_root / "Qt" / "plugins",
+        pyqt_root / "qt_plugins",
+        pyqt_root / "qt" / "plugins",
+    ]
+    src_plugins = None
+    for c in candidates:
+        if c.is_dir():
+            src_plugins = c
+            break
+
+    if not src_plugins:
+        print("copy_qt_plugins_to_dist: 未找到 PyQt5 的 plugins 目录，已检查候选:", candidates)
+        return
+
+    wanted = ["platforms", "imageformats", "iconengines", "printsupport", "styles"]
+    # Nuitka creates dist/<BUILD_BASENAME>.dist
+    target_base = Path(dist_root) / f"{BUILD_BASENAME}.dist" / "PyQt5" / "qt-plugins"
+    target_base.mkdir(parents=True, exist_ok=True)
+
+    for sub in wanted:
+        src = src_plugins / sub
+        if src.is_dir():
+            dst = target_base / sub
+            print(f"复制 Qt 插件: {src} -> {dst}")
+            shutil.copytree(src, dst, dirs_exist_ok=True)
+        else:
+            print(f"copy_qt_plugins_to_dist: 插件子目录不存在: {src} (跳过)")
+
+
 def addLocalizedMetadata(platform=None):
     """Add metadata that changes with the language of the target system."""
     platform = platform or sys.platform
@@ -335,7 +387,20 @@ def addLocalizedMetadata(platform=None):
 
 def main():
     command = createBuildCommand()
+    print("Running build command:", " ".join(command))
     subprocess.run(command, cwd=PROJECT_ROOT, check=True)
+
+    # If this is an ARM64 native build, the Nuitka pyqt5 plugin may have been
+    # skipped earlier; ensure Qt plugins are present in the dist so runtime
+    # can load them.
+    if sys.platform == 'win32' and is_arm64_build():
+        try:
+            copy_qt_plugins_to_dist(DIST_FOLDER)
+        except Exception as e:
+            # Log but don't fail the build here; allow the build artifact to be
+            # inspected even if plugin copying fails.
+            print("copy_qt_plugins_to_dist 出错:", e)
+
     addLocalizedMetadata()
 
 
