@@ -70,6 +70,40 @@ jobs:
       #     PY
       #     QT_QPA_PLATFORM=offscreen python -m pytest -q
 
+      - name: Upgrade pip and Nuitka
+        shell: msys2 {0}
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade nuitka
+
+      - name: Patch Nuitka IncludedEntryPoints (workaround)
+        shell: msys2 {0}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sys
+
+          p = Path(r"C:/a/_temp/msys64/clangarm64/lib/python3.14/site-packages/nuitka/freezer/IncludedEntryPoints.py")
+          if not p.exists():
+              print("IncludedEntryPoints.py not found at", p)
+              sys.exit(1)
+
+          s = p.read_text(encoding="utf-8")
+          old = "assert source_path == getNormalizedPath(source_path), source_path"
+          new = (
+              "from os import path as _os_path\n"
+              "normalized = getNormalizedPath(source_path)\n"
+              "if _os_path.normcase(source_path) != _os_path.normcase(normalized):\n"
+              "    source_path = normalized\n"
+          )
+          if old in s:
+              s = s.replace(old, new)
+              p.write_text(s, encoding="utf-8")
+              print('Patched IncludedEntryPoints.py')
+          else:
+              print('Expected assertion not found; no patch applied')
+          PY
+
       - name: Build native ARM64 application with Nuitka
         shell: msys2 {0}
         env:
