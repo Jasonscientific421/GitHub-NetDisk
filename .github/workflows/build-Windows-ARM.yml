@@ -1,6 +1,6 @@
 name: Build Windows (ARM64 native)
 
-于:
+on:
   workflow_dispatch:
   workflow_call:
 
