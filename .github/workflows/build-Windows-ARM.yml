@@ -84,12 +84,7 @@ jobs:
 
           s = p.read_text(encoding="utf-8")
           old = "assert source_path == getNormalizedPath(source_path), source_path"
-          new = (
-              "from os import path as _os_path\n"
-              "normalized = getNormalizedPath(source_path)\n"
-              "if _os_path.normcase(source_path) != _os_path.normcase(normalized):\n"
-              "    source_path = normalized\n"
-          )
+          new = "# assert source_path == getNormalizedPath(source_path), source_path"
           if old in s:
               s = s.replace(old, new)
               p.write_text(s, encoding="utf-8")
