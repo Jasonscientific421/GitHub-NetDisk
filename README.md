@@ -20,9 +20,13 @@
 - Switch repository branches and quickly reopen recently used repositories.
 - Use light or dark themes, HiDPI, and Simplified Chinese, Traditional Chinese, or English.
 
-> [!CAUTION] Disclaimer
+> [!CAUTION]
+> Disclaimer
+> 
 > This software is not an official GitHub product and is not affiliated with or subordinate to GitHub in any way.
+> 
 > All storage services are provided by GitHub. Users are responsible for ensuring that the content they publish complies with the laws of their jurisdiction, GitHub's Terms of Service, Acceptable Use Policies, and other GitHub site policies. Contributors to this software accept no responsibility for consequences arising from its use.
+> 
 > GitHub Release storage, bandwidth, and API requests remain subject to GitHub's terms and quotas. This software does not bypass those limits and must not be used for infringement or service abuse.
 
 ## Quick start
