@@ -1,6 +1,6 @@
 name: Build Windows (ARM64 native)
 
-on:
+于:
   workflow_dispatch:
   workflow_call:
 
@@ -79,7 +79,7 @@ jobs:
         run: |
           VERSION=$(python -c "from app.common.setting import VERSION; print(VERSION)")
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
-          python deploy.py
+          python -O deploy.py
 
       - name: Add native ARM64 aria2 tools when available
         shell: pwsh
