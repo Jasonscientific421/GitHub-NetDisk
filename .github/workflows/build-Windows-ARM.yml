@@ -70,12 +70,6 @@ jobs:
       #     PY
       #     QT_QPA_PLATFORM=offscreen python -m pytest -q
 
-      - name: Upgrade pip and Nuitka
-        shell: msys2 {0}
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade nuitka
-
       - name: Patch Nuitka IncludedEntryPoints (workaround)
         shell: msys2 {0}
         run: |
