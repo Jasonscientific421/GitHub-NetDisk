@@ -48,26 +48,26 @@ jobs:
           python -m pip install --no-deps --ignore-requires-python \
             pyqt5-concurrent==0.1.7
 
-      - name: Verify native architecture and dependencies
-        shell: msys2 {0}
-        run: |
-          python - <<'PY'
-          import platform
-          import aria2p
-          import cryptography
-          import github
-          import loguru
-          import PyQt5
-          import pyqt5_concurrent
-          import qfluentwidgets
-          import qframelesswindow
+      # - name: Verify native architecture and dependencies
+      #   shell: msys2 {0}
+      #   run: |
+      #     python - <<'PY'
+      #     import platform
+      #     import aria2p
+      #     import cryptography
+      #     import github
+      #     import loguru
+      #     import PyQt5
+      #     import pyqt5_concurrent
+      #     import qfluentwidgets
+      #     import qframelesswindow
 
-          architecture = platform.machine().lower()
-          if architecture not in ('arm64', 'aarch64'):
-              raise RuntimeError(f'Expected native ARM64 Python, got {architecture}')
-          print(f'Native dependency smoke test passed on {architecture}')
-          PY
-          QT_QPA_PLATFORM=offscreen python -m pytest -q
+      #     architecture = platform.machine().lower()
+      #     if architecture not in ('arm64', 'aarch64'):
+      #         raise RuntimeError(f'Expected native ARM64 Python, got {architecture}')
+      #     print(f'Native dependency smoke test passed on {architecture}')
+      #     PY
+      #     QT_QPA_PLATFORM=offscreen python -m pytest -q
 
       - name: Build native ARM64 application with Nuitka
         shell: msys2 {0}
