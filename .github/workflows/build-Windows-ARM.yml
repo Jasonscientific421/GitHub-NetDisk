@@ -1,0 +1,111 @@
+name: Build Windows (ARM64 native)
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build-windows-arm64:
+    runs-on: windows-11-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up native MSYS2 CLANGARM64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANGARM64
+          update: true
+          install: >-
+            mingw-w64-clang-aarch64-cc
+            mingw-w64-clang-aarch64-python
+            mingw-w64-clang-aarch64-python-pip
+            mingw-w64-clang-aarch64-python-pyqt5
+            mingw-w64-clang-aarch64-qt5-svg
+            mingw-w64-clang-aarch64-python-pywin32
+            mingw-w64-clang-aarch64-python-cryptography
+            mingw-w64-clang-aarch64-python-requests
+            mingw-w64-clang-aarch64-python-pygithub
+            mingw-w64-clang-aarch64-python-nuitka
+            mingw-w64-clang-aarch64-python-numpy
+            mingw-w64-clang-aarch64-python-scipy
+            mingw-w64-clang-aarch64-python-pillow
+
+      - name: Install pure-Python dependencies
+        shell: msys2 {0}
+        run: |
+          python -m pip install --no-deps \
+            PyQt-Fluent-Widgets==1.11.2 \
+            PyQt5-Frameless-Window==0.8.1
+          python -m pip install \
+            darkdetect \
+            colorthief \
+            "aria2p>=0.11.3,<0.13" \
+            "loguru>=0.7,<0.8" \
+            "pytest>=7,<9"
+          # 0.1.7 is pure Python and its source is compatible with 3.14, but
+          # its package metadata still declares Python <3.13. The test step
+          # below is the release gate for this explicit compatibility waiver.
+          python -m pip install --no-deps --ignore-requires-python \
+            pyqt5-concurrent==0.1.7
+
+      - name: Verify native architecture and dependencies
+        shell: msys2 {0}
+        run: |
+          python - <<'PY'
+          import platform
+          import aria2p
+          import cryptography
+          import github
+          import loguru
+          import PyQt5
+          import pyqt5_concurrent
+          import qfluentwidgets
+          import qframelesswindow
+
+          architecture = platform.machine().lower()
+          if architecture not in ('arm64', 'aarch64'):
+              raise RuntimeError(f'Expected native ARM64 Python, got {architecture}')
+          print(f'Native dependency smoke test passed on {architecture}')
+          PY
+          QT_QPA_PLATFORM=offscreen python -m pytest -q
+
+      - name: Build native ARM64 application with Nuitka
+        shell: msys2 {0}
+        env:
+          CC: clang
+          CXX: clang++
+          GITHUB_NETDISK_WINDOWS_ARM64: '1'
+        run: |
+          VERSION=$(python -c "from app.common.setting import VERSION; print(VERSION)")
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          python deploy.py
+
+      - name: Add native ARM64 aria2 tools when available
+        shell: pwsh
+        run: |
+          $url = "https://github.com/XiaoshuDeXiaowo/GitHub-NetDisk-Tools/releases/download/v0.0.1/Windows-arm64.zip"
+          try {
+            Invoke-WebRequest -Uri $url -OutFile "$env:TEMP/tools-arm64.zip"
+            Expand-Archive "$env:TEMP/tools-arm64.zip" "dist/GitHub-NetDisk.dist/tools" -Force
+          } catch {
+            Write-Warning "Native ARM64 tools are unavailable; the built-in downloader remains available. $_"
+          }
+
+      - name: Install Inno Setup language
+        shell: pwsh
+        run: |
+          $compiler = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $compiler)) {
+            choco install innosetup --yes --no-progress
+          }
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/ChineseSimplified.isl" -OutFile "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+
+      - name: Build ARM64 installer
+        shell: pwsh
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DMyAppVersion=$env:VERSION" "/DMyAppArch=arm64" "/DMyArtifactArch=arm64" GitHub-NetDisk.iss
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GitHub-NetDisk-v${{ env.VERSION }}-Windows-arm64-Setup
+          path: dist/GitHub-NetDisk-v${{ env.VERSION }}-Windows-arm64-Setup.exe

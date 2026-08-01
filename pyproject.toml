@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "github-netdisk"
+version = "0.0.1"
+description = "A Fluent desktop cloud-drive client backed by GitHub Release"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [
+    { name = "XiaoshuDeXiaowo" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: X11 Applications :: Qt",
+    "License :: OSI Approved :: GNU General Public License v3 (GPL-3.0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "PyQt5>=5.15.2",
+    "PyQt-Fluent-Widgets[full]>=1.11.2,<1.12",
+    "cryptography==40.0.1; python_version <= '3.8'",
+    "cryptography; python_version >= '3.8'",
+    "PyGithub>=2.8,<3",
+    "requests>=2.31,<3",
+    "pyqt5-concurrent>=0.1,<0.2",
+    "loguru>=0.7,<0.8",
+    "keyring>=25,<26",
+    "pyobjc-framework-Cocoa>=10; sys_platform == 'darwin'",
+    "pyobjc-framework-Quartz>=10; sys_platform == 'darwin'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7,<9",
+    "Nuitka; sys_platform == 'win32' or sys_platform == 'darwin'",
+    "PyInstaller; sys_platform != 'win32' and sys_platform != 'darwin'",
+]
+build = [
+    "Nuitka; sys_platform == 'win32' or sys_platform == 'darwin'",
+    "PyInstaller; sys_platform != 'win32' and sys_platform != 'darwin'",
+]
+
+[project.urls]
+Homepage = "https://github-netdisk.top/"
+Documentation = "https://github-netdisk.top/"
+Issues = "https://github.com/XiaoshuDeXiaowo/GitHub-NetDisk/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+namespaces = true
+
+[tool.pytest.ini_options]
+testpaths = ["test"]

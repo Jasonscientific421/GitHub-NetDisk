@@ -1,0 +1,75 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve GitHub NetDisk! Before opening this issue, please check the latest release, search existing issues, and read the official documentation.
+
+        Never post an access token, device code, private repository link, or sensitive file information in a public issue.
+
+        GitHub provides the underlying Release storage. Storage, bandwidth, API limits, account access, and service availability are governed by GitHub. GitHub NetDisk cannot change those limits.
+  - type: checkboxes
+    id: before-reporting
+    attributes:
+      label: Before reporting
+      options:
+        - label: I have checked that this problem still exists in the latest version.
+          required: true
+        - label: I have searched existing issues and removed tokens, private links, and sensitive file information.
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Tell us what you expected and what happened instead.
+      placeholder: Describe the problem you saw.
+    validations:
+      required: true
+  - type: dropdown
+    id: access-mode
+    attributes:
+      label: Access mode
+      description: Which access mode were you using when the problem happened?
+      options:
+        - GitHub App
+        - Personal Access Token
+        - Read-only
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: OS
+    attributes:
+      label: Operating system
+      description: Which operating system and version are you using?
+      placeholder: ex. Windows 11 24H2 26100
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: GitHub NetDisk Version
+      description: Which version of GitHub NetDisk are you using? Please ensure you are using the latest version.
+      placeholder: ex. v0.0.1
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to Reproduce?
+      description: A clear and concise description of what the bug is.
+      placeholder: Steps to reproduce the behavior(you can use gif to demonstrate the problem :)
+    validations:
+      required: true
+  - type: textarea
+    id: logs-screenshots
+    attributes:
+      label: Logs or screenshots
+      description: Attach relevant logs, screenshots, recordings, or GIFs. Remove tokens and private data first.
+      placeholder: Drag files here or paste sanitized logs.
+    validations:
+      required: false

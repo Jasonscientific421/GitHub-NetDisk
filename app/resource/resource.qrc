@@ -1,0 +1,27 @@
+<RCC>
+  <qresource prefix="/app">
+    <file>images/icons/Upload_black.svg</file>
+    <file>images/icons/Upload_white.svg</file>
+    <file>images/icons/Branch_black.svg</file>
+    <file>images/icons/Branch_white.svg</file>
+    <file>images/icons/Contact_white.svg</file>
+    <file>images/icons/Contact_black.svg</file>
+    <file>images/icons/Download_black.svg</file>
+    <file>images/icons/Download_white.svg</file>
+    <file>images/icons/Repo_black.svg</file>
+    <file>images/icons/Repo_white.svg</file>
+    <file>images/icons/Rename_black.svg</file>
+    <file>images/icons/Rename_white.svg</file>
+    <file>images/icons/Settings_white.svg</file>
+    <file>images/icons/Settings_black.svg</file>
+    <file>images/icons/SettingsFilled_white.svg</file>
+    <file>images/icons/SettingsFilled_black.svg</file>
+    <file>images/logo.png</file>
+    <file>images/logo.icns</file>
+    <file>lang/en_us.json</file>
+    <file>lang/zh_cn.json</file>
+    <file>lang/zh_hk.json</file>
+    <file>qss/light/fluent_interface.qss</file>
+    <file>qss/dark/fluent_interface.qss</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=GitHub NetDisk
+Name[zh_CN]=GitHub 网盘
+Name[zh_HK]=GitHub 網盤
+Exec=github-netdisk %u
+Icon=github-netdisk
+Categories=Network;FileTransfer;
+MimeType=x-scheme-handler/github-netdisk;
+Terminal=false

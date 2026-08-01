@@ -1,0 +1,54 @@
+name: Build Linux
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-22.04
+            architecture: x86_64
+            deb_arch: amd64
+          - runner: ubuntu-24.04-arm
+            architecture: arm64
+            deb_arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install system and build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qt5-qmake qtbase5-dev
+          python -m pip install -e ".[build]"
+      - name: Build application
+        run: |
+          VERSION=$(python -c "from app.common.setting import VERSION; print(VERSION)")
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          python deploy.py
+      - name: Add aria2 tools
+        run: |
+          url="https://github.com/XiaoshuDeXiaowo/GitHub-NetDisk-Tools/releases/download/v0.0.1/Linux-${{ matrix.architecture }}.zip"
+          curl -fL "$url" -o /tmp/tools.zip
+          mkdir -p dist/GitHub-NetDisk/tools
+          unzip -o /tmp/tools.zip -d dist/GitHub-NetDisk/tools
+      - name: Build Debian package
+        run: |
+          root="package-root"
+          mkdir -p "$root/opt/github-netdisk" "$root/usr/bin" "$root/usr/share/applications" "$root/usr/share/icons/hicolor/256x256/apps" "$root/DEBIAN"
+          cp -a dist/GitHub-NetDisk/. "$root/opt/github-netdisk/"
+          ln -s /opt/github-netdisk/GitHub-NetDisk "$root/usr/bin/github-netdisk"
+          cp app/resource/images/logo.png "$root/usr/share/icons/hicolor/256x256/apps/github-netdisk.png"
+          sed "s/@VERSION@/$VERSION/; s/@ARCH@/${{ matrix.deb_arch }}/" .github/linux/control.in > "$root/DEBIAN/control"
+          cp .github/linux/github-netdisk.desktop "$root/usr/share/applications/"
+          dpkg-deb --build --root-owner-group "$root" "GitHub-NetDisk-v$VERSION-Linux-${{ matrix.architecture }}.deb"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GitHub-NetDisk-v${{ env.VERSION }}-Linux-${{ matrix.architecture }}
+          path: GitHub-NetDisk-v${{ env.VERSION }}-Linux-${{ matrix.architecture }}.deb

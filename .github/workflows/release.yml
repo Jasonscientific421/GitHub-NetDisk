@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  windows:
+    uses: ./.github/workflows/build-Windows.yml
+  windows-arm:
+    uses: ./.github/workflows/build-Windows-ARM.yml
+  linux:
+    uses: ./.github/workflows/build-Linux.yml
+  macos-arm:
+    uses: ./.github/workflows/build-macOS-Apple.yml
+  macos-intel:
+    uses: ./.github/workflows/build-macOS-Intel.yml
+  publish:
+    needs: [windows, windows-arm, linux, macos-arm, macos-intel]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*

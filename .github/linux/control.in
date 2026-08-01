@@ -1,0 +1,7 @@
+Package: github-netdisk
+Version: @VERSION@
+Section: net
+Priority: optional
+Architecture: @ARCH@
+Maintainer: XiaoshuDeXiaowo
+Description: Fluent desktop cloud-drive client backed by GitHub Release

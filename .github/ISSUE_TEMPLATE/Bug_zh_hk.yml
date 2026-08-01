@@ -1,0 +1,75 @@
+name: 錯誤回報
+description: 回報 GitHub-NetDisk 中的問題
+title: "[Bug]: "
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感謝你協助改進 GitHub NetDisk！提交前請先確認問題在最新版本中仍然存在，搜尋現有 Issue，並查閱官方文件。
+
+        請勿在公開 Issue 中發布存取權杖、裝置驗證碼、私人儲存庫連結或敏感檔案資料。
+
+        底層 Release 儲存由 GitHub 提供。儲存空間、流量、API 配額、帳戶權限與服務可用性均由 GitHub 管理，GitHub NetDisk 無法更改這些限制。
+  - type: checkboxes
+    id: before-reporting
+    attributes:
+      label: 回報前
+      options:
+        - label: 我已確認此問題在最新版本中仍然存在。
+          required: true
+        - label: 我已搜尋現有 Issue，並移除了 Token、私人連結和敏感檔案資料。
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 發生了什麼？
+      description: 請說明預期結果與實際結果。
+      placeholder: 請清楚描述你看到的問題。
+    validations:
+      required: true
+  - type: dropdown
+    id: access-mode
+    attributes:
+      label: 存取方式
+      description: 問題發生時你正在使用哪種存取方式？
+      options:
+        - GitHub App
+        - Personal Access Token
+        - 唯讀模式
+        - 不確定
+    validations:
+      required: true
+  - type: input
+    id: OS
+    attributes:
+      label: 作業系統
+      description: 你正在使用哪個作業系統及其版本？
+      placeholder: 例如 Windows 11 24H2 26100
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: GitHub NetDisk 版本
+      description: 請確認已升級到最新版，並填寫版本號。
+      placeholder: 例如 v0.0.1
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 如何重現？
+      description: 請列出可穩定重現問題的完整步驟。
+      placeholder: 可附上截圖、錄影或 GIF。
+    validations:
+      required: true
+  - type: textarea
+    id: logs-screenshots
+    attributes:
+      label: 記錄或截圖
+      description: 請附上相關記錄、截圖、錄影或 GIF，並先移除 Token 與私人資料。
+      placeholder: 可拖曳檔案到這裡，或貼上已脫敏的記錄。
+    validations:
+      required: false

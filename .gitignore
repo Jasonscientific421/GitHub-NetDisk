@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Build
+dist/
+build/
+*.build/
+*.dist/
+*.spec
+*.egg-info/
+
+# Application
+config/
+logs/
+
+# IDE
+.vscode/
+.VSCodeCounter
+*.code-workspace
+.idea/
