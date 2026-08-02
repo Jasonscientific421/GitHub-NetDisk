@@ -8,6 +8,7 @@ import struct
 import subprocess
 import sys
 import shutil
+import platform
 from pathlib import Path
 
 from app.common.setting import APP_NAME, VERSION
@@ -295,8 +296,12 @@ def localizeWindowsExecutable(executable_path):
     try:
         # Nuitka may create a language-neutral fallback. Removing it prevents
         # it from taking precedence over a target-language resource.
-        update_resource(handle, ctypes.c_void_p(16), ctypes.c_void_p(1),
-                        0, None, 0)
+        # If the resource does not exist, this call fails; we ignore that error.
+        try:
+            update_resource(handle, ctypes.c_void_p(16), ctypes.c_void_p(1),
+                            0, None, 0)
+        except ctypes.WinError:
+            pass  # Resource not present, nothing to remove
 
         names = getLocalizedAppNames()
         for language_id, app_locale in WINDOWS_LOCALIZATIONS.items():
@@ -317,11 +322,23 @@ def localizeWindowsExecutable(executable_path):
             raise ctypes.WinError()
         committed = True
     finally:
-        if not committed:
+        if not committed and handle:
             end_update(handle, True)
 
 
 def _findArtifact(pattern):
+    """Return the most likely build artifact, preferring known Nuitka paths."""
+    # Try the exact expected path first (Nuitka standard output)
+    if pattern == f'{BUILD_BASENAME}.exe':
+        expected = DIST_FOLDER / f'{BUILD_BASENAME}.dist' / f'{BUILD_BASENAME}.exe'
+        if expected.is_file():
+            return expected
+    elif pattern == f'{BUILD_BASENAME}.app':
+        expected = DIST_FOLDER / f'{BUILD_BASENAME}.app'
+        if expected.is_dir():
+            return expected
+
+    # Fallback: search recursively and pick the newest
     artifacts = list(DIST_FOLDER.rglob(pattern))
     if not artifacts:
         raise FileNotFoundError(f'Build artifact not found: {pattern}')
@@ -356,8 +373,9 @@ def copy_qt_plugins_to_dist(dist_root=DIST_FOLDER):
         return
 
     wanted = ["platforms", "imageformats", "iconengines", "printsupport", "styles"]
-    # Nuitka creates dist/<BUILD_BASENAME>.dist
-    target_base = Path(dist_root) / f"{BUILD_BASENAME}.dist" / "PyQt5" / "qt-plugins"
+    # Nuitka creates dist/<BUILD_BASENAME>.dist. The executable is there,
+    # so we place qt-plugins at the same level so that Qt can find it.
+    target_base = Path(dist_root) / f"{BUILD_BASENAME}.dist" / "qt-plugins"
     target_base.mkdir(parents=True, exist_ok=True)
 
     for sub in wanted:
