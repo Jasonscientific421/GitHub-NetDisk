@@ -38,7 +38,9 @@ jobs:
           Expand-Archive "$env:TEMP/tools.zip" "dist/GitHub-NetDisk.dist/tools" -Force
       - name: Install Inno Setup language
         shell: pwsh
-        run: Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/ChineseSimplified.isl" -OutFile "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+        run: |
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/ChineseSimplified.isl" -OutFile "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/ChineseTraditional.isl" -OutFile "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseTraditional.isl"
       - name: Build installer
         shell: pwsh
         run: |
