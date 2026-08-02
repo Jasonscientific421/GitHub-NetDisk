@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: windows-2019
+          - runner: windows-2022
             architecture: x86_64
             python: '3.8'
             inno_arch: x64compatible
